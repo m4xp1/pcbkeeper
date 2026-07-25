@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PrivateCard Backup Keeper</string>
+    <string name="notification_channel_name">Backup monitoring</string>
+    <string name="notification_channel_description">Monitors PrivateCard backups and archives verified copies</string>
+    <string name="usb_notification_channel_name">USB backup</string>
+    <string name="usb_notification_channel_description">Copies and verifies PrivateCard backups on a USB flash drive</string>
+</resources>
