@@ -201,7 +201,7 @@ public final class SetupActivity extends Activity {
             if ((flags & requiredFlags) != requiredFlags) {
                 throw new SecurityException("The selected folder did not grant read and write access.");
             }
-            getContentResolver().takePersistableUriPermission(uri, flags);
+            getContentResolver().takePersistableUriPermission(uri, requiredFlags);
             if (requestCode == REQUEST_SOURCE_TREE) {
                 validateAndSaveSource(uri);
             } else if (requestCode == REQUEST_SD_TREE) {
