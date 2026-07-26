@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     name: Test and build release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     env:
@@ -88,7 +88,6 @@ jobs:
             exit 1
           fi
 
-          echo "RELEASE_TAG=$tag" >> "$GITHUB_ENV"
           echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
           echo "RELEASE_NOTES_FILE=$notes_file" >> "$GITHUB_ENV"
 
@@ -133,7 +132,23 @@ jobs:
         run: |
           set -Eeuo pipefail
 
-          sdkmanager \
+          sdkmanager="$(
+            find "$ANDROID_HOME/cmdline-tools" \
+              -type f \
+              -path '*/bin/sdkmanager' \
+              -print \
+              -quit
+          )"
+
+          if [[ -z "$sdkmanager" ]]; then
+            echo "sdkmanager was not found under:"
+            echo "  $ANDROID_HOME/cmdline-tools"
+            exit 1
+          fi
+
+          yes | "$sdkmanager" --licenses >/dev/null || true
+
+          "$sdkmanager" \
             "platforms;android-35" \
             "build-tools;35.0.0"
 
@@ -307,7 +322,7 @@ jobs:
   publish:
     name: Publish GitHub Release
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
 
     permissions:
