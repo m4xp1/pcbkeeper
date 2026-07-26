@@ -1,0 +1,19 @@
+# Default behavior
+* text=auto
+
+# Gradle wrapper scripts
+gradlew text eol=lf
+*.sh text eol=lf
+
+# Windows scripts
+*.bat text eol=crlf
+
+# Gradle properties
+*.properties text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# YAML
+*.yml text eol=lf
+*.yaml text eol=lf
