@@ -2,6 +2,18 @@ plugins {
     id 'com.android.application'
 }
 
+def releaseKeystorePath = System.getenv('ANDROID_KEYSTORE_PATH')
+def releaseKeystorePassword = System.getenv('ANDROID_KEYSTORE_PASSWORD')
+def releaseKeyAlias = System.getenv('ANDROID_KEY_ALIAS')
+def releaseKeyPassword = System.getenv('ANDROID_KEY_PASSWORD')
+
+def releaseSigningConfigured = [
+        releaseKeystorePath,
+        releaseKeystorePassword,
+        releaseKeyAlias,
+        releaseKeyPassword
+].every { value -> value != null && !value.trim().isEmpty() }
+
 android {
     namespace 'com.max.privatecardbackup'
     compileSdk 35
@@ -16,9 +28,26 @@ android {
         testInstrumentationRunner 'android.test.InstrumentationTestRunner'
     }
 
+    signingConfigs {
+        release {
+            if (releaseSigningConfigured) {
+                storeFile file(releaseKeystorePath)
+                storeType 'PKCS12'
+                storePassword releaseKeystorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            
+           if (releaseSigningConfigured) {
+                signingConfig signingConfigs.release
+            }
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
